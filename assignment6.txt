@@ -1,0 +1,66 @@
+***** Assignment 6 *****
+
+************************
+Name: Aldiansyah S.
+ID: suryouta
+************************
+
+1.
+command line:
+$ mkdir hw6
+$ vi hw6.txt
+$
+
+2.
+REVISE command line:
+$ cat pz_cDNAs.full.fasta | sed -r 's/(>[^_[:space:]]+)(_[A-Z]+{0,1})/\1_nogroup/'  > dr_obnoxious.fasta
+$
+
+
+3.
+command line:
+$ cat pz_cDNAs.full.fasta | grep '_' | sed -r 's/_/ /' | awk '{print $2}' | sort | uniq -c | less -S
+group has the most sequences is A 5753
+
+4.
+I answered this number for extra credit. To achieve the result, I used several step.
+
+> First, I made the sequences become 1 line with this command line, and stored in A.txt. However, I did not include the ACTG but the length of sequence. The length would become primary key.
+$ cat pz_cDNAs.full.fasta | sed -r 's/ nReads=/ /' | sed -r 's/ cov=/ /' | tr '\n' '#' | sed -r 's/>/\n>/g' | sed 's/#/ /g' | sed 's/ //4g' | awk '{print $1,$2,$3,length}' > A.txt
+the result in A.txt:
+>PZ7180000000004_TX 26 9.436 1029
+>PZ7180000031590 3 2.59465 513
+>PZ7180000027934 5 2.32231 964
+
+> Second, I just print the length of sequence and the sequence with 70 character long. Here is the command line:
+$ cat pz_cDNAs.full.fasta | sed -r 's/ nReads=/ /' | sed -r 's/ cov=/ /' | tr '\n' '#' | sed -r 's/>/\n>/g' | sed 's/#/ /g' | sed 's/ //4g' | awk '{print length" "$4}' | cut -c -70 > B.txt
+the result in B.txt:
+1029 AATGCGAATATTTTTATTTACAATCAATTACAATCAAGTCTTAAACTTATAGATTATAAAAATTA
+513 CTGTTTGTCGAACTAAGACAAAGTGTCCCGACAATTCTTGATAATAGTCTTAATTACTATCTGAAT
+964 TTTAATGATCAGTAAAGTTATAGTAGTTGTATGTACAATATTGTGCTAGCTTGAGACAGTCATGGA
+
+> Last, I join them with the length of sequence as a primary key.
+Here is the command line:
+$ join -1 4 -2 1 A.txt B.txt | awk '{print $2" "$3" "$4" "$5}' > pz_cDNAs.full.nosingles.fasta
+the result:
+>PZ7180000022523 28 7.67314 GAATTAATTTCTTTAAATTATATAGCAACTGTTGTAAATAACATAGCCGTCGCCTGCGATTTAAT
+>PZ801814 1 1 ATTGTCATTTATTTATTAGAATGAAACATAATTTGTATTTACATTATTTACATAAATTATCAAAAT
+>PZ7180000028777 3 1.47983 TATAATCATCAATTAGTGTCTTAATTCATTACATTTTTTAGGGTTTTAACGTAATACAAGTTCAAG
+
+REVISE COMMAND LINE:
+$ cat pz_cDNAs.full.fasta | sed -r 's/ nReads=/ /' | sed -r 's/ cov=/ /' | tr '\n' '#' | sed -r 's/>/\n>/g' | sed -r 's/#/ /1' | awk '{if($3 > 1) print $0}' | sed -r 's/#//g' | awk '{print $1" "$4}' | tr ' ' '\n' > pz_cDNAs.full.nosingles.fasta
+
+5.
+command line:
+$ cat yeast_proteins.fasta | grep '>' | awk '{print $1,$7}' | sed -r 's/,/ /g' | awk '{if($3 == NULL) print $1,$2}' | wc -l
+5561
+
+"alternative" command line:
+$ cat yeast_proteins.fasta | grep '>' | awk '{print $1"----"$7}' | cut -d',' -f2,7 | sort -k7,7d | uniq -c | less -S
+ 5561 
+      1 101788-101701
+      1 102232-100928
+Thus, the answer 5561
+
+the ID has the most exons is:
+>Q0045 13818-13986,16435-16470,18954-18991,20508-20984,21995-22246,23612-23746,25318-25342,26229-26701
