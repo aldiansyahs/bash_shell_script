@@ -1,0 +1,46 @@
+======= Assignment 5 =======
+
+###############################
+# Name: Aldiansyah Suryoutomo #
+# ID: suryouta		            #
+###############################
+
+1.
+command line:
+$ mkdir hw5
+$ cd hw5/
+$ vi hw5
+
+2.
+command line:
+$ cat gene_exp.diff | tail -n +2 | awk '{if ($10 > 0 && ($14 == "yes")) {print $0}}' | wc -l
+505
+
+basically, for this number I use command 'head -n 1' to know the content of the file's head and count the column that it has.
+
+3.
+command line:
+$ cp /ACTF/inx_s17/data/hw5/pz_cDNAs.full.fasta $HOME/projects/hw5/
+$ cat pz_cDNAs.full.fasta | grep '>' | wc -l
+34609
+$
+
+4.
+command line:
+$ cat pz_cDNAs.full.fasta | grep '>' | sed -r 's/=/ /' | awk '{if ($3 == 1) {print $0}}' | wc -l
+15473
+$
+
+5.
+command line:
+$ cat pz_cDNAs.full.fasta | grep '>' | grep -v '_' | wc -l
+21237
+
+the highest coverage:
+$ cat pz_cDNAs.full.fasta | grep '>' | grep -v '_' | sort -k3,3dr | head -n 1
+>PZ7180000035840 nReads=37 cov=9.99796
+
+6.
+command line:
+$ cat pz_cDNAs.full.fasta | grep '>' | grep '_' | sed -r 's/_/ /' | sort -k2,2d -u | wc -l
+1613
